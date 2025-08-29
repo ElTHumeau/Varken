@@ -122,6 +122,16 @@ class Queue(NamedTuple):
     trackedDownloadStatus: str = None
 
 
+# Shared
+class QueuePages(NamedTuple):
+    page: int = None
+    pageSize: int = None
+    sortKey: str = None
+    sortDirection: str = None
+    totalRecords: str = None
+    records: list = None
+
+
 # Ombi Structures
 class OmbiRequestCounts(NamedTuple):
     approved: int = 0
@@ -287,6 +297,9 @@ class SonarrEpisode(NamedTuple):
     tvdbId: int = None
     unverifiedSceneNumbering: bool = None
     lastSearchTime: str = None
+    # Champs supplémentaires de l'API v3
+    seriesType: str = None
+    episodeFileId: int = None
 
 
 # Radarr

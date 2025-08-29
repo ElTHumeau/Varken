@@ -32,9 +32,22 @@ class RadarrAPI(object):
             return
 
         try:
-            movies = [RadarrMovie(**movie) for movie in get]
-        except TypeError as e:
-            self.logger.error('TypeError has occurred : %s while creating RadarrMovie structure', e)
+            # Filtrer les champs qui ne sont pas dans RadarrMovie
+            movies = []
+            for movie in get:
+                try:
+                    movie_data = {k: v for k, v in movie.items() if k in RadarrMovie._fields}
+                    movies.append(RadarrMovie(**movie_data))
+                except TypeError as e:
+                    self.logger.error('TypeError has occurred : %s while creating RadarrMovie structure for movie: %s', e, movie.get('title', 'Unknown'))
+                    # Log les champs problématiques pour debug
+                    problematic_fields = [k for k in movie.keys() if k not in RadarrMovie._fields]
+                    if problematic_fields:
+                        self.logger.debug('Champs non reconnus dans RadarrMovie: %s', problematic_fields)
+                        self.logger.debug('Champs disponibles dans RadarrMovie: %s', list(RadarrMovie._fields))
+                    continue
+        except Exception as e:
+            self.logger.error('Error processing Radarr movies: %s', e)
             return
 
         for movie in movies:
@@ -103,10 +116,16 @@ class RadarrAPI(object):
 
         for item in queueResponse:
             try:
-                queue.append(RadarrQueue(**item))
+                # Filtrer les champs qui ne sont pas dans RadarrQueue
+                queue_data = {k: v for k, v in item.items() if k in RadarrQueue._fields}
+                queue.append(RadarrQueue(**queue_data))
             except TypeError as e:
                 self.logger.error('TypeError has occurred : %s while creating RadarrQueue structure for queue item. Data '
                                   'attempted is: %s', e, item)
+                # Log les champs problématiques pour debug
+                problematic_fields = [k for k in item.keys() if k not in RadarrQueue._fields]
+                if problematic_fields:
+                    self.logger.debug('Champs non reconnus dans RadarrQueue: %s', problematic_fields)
 
         for item in queue:
             if item.movie:

@@ -1,7 +1,3 @@
-"""
-Module Sonarr avec support API v3
-Compatible avec les versions v1 et v3 de l'API Sonarr
-"""
 from logging import getLogger
 from requests import Session, Request
 from datetime import datetime, timezone, date, timedelta
@@ -105,17 +101,17 @@ class SonarrAPI(object):
             self.logger.warning("No data to send to influx for sonarr-calendar instance, discarding.")
 
     def get_queue(self):
+        influx_payload = []
         endpoint = '/api/v3/queue'
         now = datetime.now(timezone.utc).astimezone().isoformat()
-        influx_payload = []
         pageSize = 250
-        params = {'pageSize': pageSize, 'includeEpisode': True, 'includeSeries': True, 'includeUnknownSeriesItems': False}
+        params = {'pageSize': pageSize, 'includeSeries': True, 'includeEpisode': True,
+                  'includeUnknownSeriesItems': False}
         queueResponse = []
         queue = []
 
         req = self.session.prepare_request(Request('GET', self.server.url + endpoint, params=params))
         get = connection_handler(self.session, req, self.server.verify_ssl)
-
         if not get:
             return
 
@@ -124,7 +120,8 @@ class SonarrAPI(object):
 
         while response.totalRecords > response.page * response.pageSize:
             page = response.page + 1
-            params = {'pageSize': pageSize, 'page': page, 'includeEpisode': True, 'includeSeries': True, 'includeUnknownSeriesItems': False}
+            params = {'pageSize': pageSize, 'page': page, 'includeSeries': True, 'includeEpisode': True,
+                      'includeUnknownSeriesItems': False}
             req = self.session.prepare_request(Request('GET', self.server.url + endpoint, params=params))
             get = connection_handler(self.session, req, self.server.verify_ssl)
             if not get:
@@ -133,51 +130,56 @@ class SonarrAPI(object):
             response = QueuePages(**get)
             queueResponse.extend(response.records)
 
-        for item in queueResponse:
+        download_queue = []
+        for queueItem in queueResponse:
             try:
-                queue.append(SonarrQueue(**item))
+                download_queue.append(SonarrQueue(**queueItem))
             except TypeError as e:
-                self.logger.error('TypeError has occurred : %s while creating SonarrQueue structure for queue item. Data '
-                                  'attempted is: %s', e, item)
+                self.logger.error('TypeError has occurred : %s while creating Queue structure. Data attempted is: '
+                                  '%s', e, queueItem)
+        if not download_queue:
+            return
 
-        for item in queue:
-            if item.episode:
-                episode = item.episode
-                series = item.series
-                sxe = f'S{episode.seasonNumber:0>2}E{episode.episodeNumber:0>2}'
-                hash_id = hashit(f'{self.server.id}{series["title"]}{sxe}')
-                influx_payload.append(
-                    {
-                        "measurement": "Sonarr",
-                        "tags": {
-                            "type": "queue",
-                            "sonarrId": series["id"],
-                            "server": self.server.id,
-                            "name": series["title"],
-                            "epname": episode.title,
-                            "sxe": sxe,
-                            "quality": item.quality["quality"]["name"],
-                            "size": item.size,
-                            "title": item.title,
-                            "timeleft": item.timeleft,
-                            "estimatedCompletionTime": item.estimatedCompletionTime,
-                            "status": item.status,
-                            "trackedDownloadState": item.trackedDownloadState,
-                            "trackedDownloadStatus": item.trackedDownloadStatus,
-                            "downloadClient": item.downloadClient,
-                            "protocol": item.protocol,
-                            "indexer": item.indexer,
-                            "outputPath": item.outputPath,
-                            "id": item.id
-                        },
-                        "time": now,
-                        "fields": {
-                            "hash": hash_id,
-                            "sizeleft": item.sizeleft,
-                            "customFormatScore": item.customFormatScore
-                        }
+        for queueItem in download_queue:
+            tvShow = SonarrTVShow(**queueItem.series)
+            try:
+                episode = SonarrEpisode(**queueItem.episode)
+                sxe = f"S{episode.seasonNumber:0>2}E{episode.episodeNumber:0>2}"
+            except TypeError as e:
+                self.logger.error('TypeError has occurred : %s while processing the sonarr queue. \
+                                  Remove invalid queue entry. Data attempted is: %s', e, queueItem)
+                continue
+
+            if queueItem.protocol.upper() == 'USENET':
+                protocol_id = 1
+            else:
+                protocol_id = 0
+
+            queue.append((tvShow.title, episode.title, queueItem.protocol.upper(),
+                          protocol_id, sxe, queueItem.seriesId, queueItem.quality['quality']['name']))
+
+        for series_title, episode_title, protocol, protocol_id, sxe, sonarr_id, quality in queue:
+            hash_id = hashit(f'{self.server.id}{series_title}{sxe}')
+            influx_payload.append(
+                {
+                    "measurement": "Sonarr",
+                    "tags": {
+                        "type": "Queue",
+                        "sonarrId": sonarr_id,
+                        "server": self.server.id,
+                        "name": series_title,
+                        "epname": episode_title,
+                        "sxe": sxe,
+                        "protocol": protocol,
+                        "protocol_id": protocol_id,
+                        "quality": quality
+                    },
+                    "time": now,
+                    "fields": {
+                        "hash": hash_id
                     }
-                )
+                }
+            )
 
         if influx_payload:
             self.dbmanager.write_points(influx_payload)
