@@ -212,35 +212,93 @@ class OmbiMovieRequest(NamedTuple):
 
 # Sonarr
 class SonarrTVShow(NamedTuple):
+    added: str = None
+    addOptions: dict = None
+    airTime: str = None
+    alternateTitles: list = None
+    certification: str = None
+    cleanTitle: str = None
+    ended: bool = None
+    episodesChanged: bool = None
+    firstAired: str = None
+    folder: str = None
+    genres: list = None
+    id: int = None
+    images: list = None
+    imdbId: str = None
+    languageProfileId: int = None
+    lastAired: str = None
+    monitored: bool = None
+    monitorNewItems: str = None
+    nextAiring: str = None
+    network: str = None
+    originalLanguage: str = None
+    overview: str = None
+    path: str = None
+    previousAiring: str = None
+    profileName: str = None
+    qualityProfileId: int = None
+    ratings: dict = None
+    remotePoster: str = None
+    rootFolderPath: str = None
+    runtime: int = None
+    seasonFolder: bool = None
+    seasons: list = None
+    seriesType: str = None
+    sortTitle: str = None
+    statistics: dict = None
+    status: str = None
+    tags: list = None
+    title: str = None
+    titleSlug: str = None
+    tmdbId: int = None
+    tvdbId: int = None
+    tvMazeId: int = None
+    tvRageId: int = None
+    useSceneNumbering: bool = None
+    year: int = None
+
+
+class SonarrEpisode(NamedTuple):
     absoluteEpisodeNumber: int = None
     airDate: str = None
     airDateUtc: str = None
+    endTime: str = None
     episodeFile: dict = None
     episodeFileId: int = None
     episodeNumber: int = None
+    finaleType: str = None
+    grabDate: str = None
+    grabbed: bool = None
     hasFile: bool = None
     id: int = None
-    lastSearchTime: str = None
+    images: list = None
     monitored: bool = None
     overview: str = None
+    runtime: int = None
     sceneAbsoluteEpisodeNumber: int = None
     sceneEpisodeNumber: int = None
     sceneSeasonNumber: int = None
     seasonNumber: int = None
-    series: dict = None
+    series: SonarrTVShow = None
     seriesId: int = None
+    seriesTitle: str = None
     title: str = None
+    tvdbId: int = None
     unverifiedSceneNumbering: bool = None
+    lastSearchTime: str = None
 
 
 # Radarr
 class RadarrMovie(NamedTuple):
     added: str = None
     addOptions: str = None
-    alternativeTitles: list = None
+    alternateTitles: list = None
     certification: str = None
     cleanTitle: str = None
-    downloaded: bool = None
+    collection: dict = None
+    digitalRelease: str = None
+    folder: str = None
     folderName: str = None
     genres: list = None
     hasFile: bool = None
@@ -249,23 +307,26 @@ class RadarrMovie(NamedTuple):
     imdbId: str = None
     inCinemas: str = None
     isAvailable: bool = None
-    lastInfoSync: str = None
     minimumAvailability: str = None
     monitored: bool = None
     movieFile: dict = None
+    originalLanguage: str = None
+    originalTitle: str = None
     overview: str = None
     path: str = None
-    pathState: str = None
+    popularity: str = None
     physicalRelease: str = None
     physicalReleaseNote: str = None
-    profileId: int = None
     qualityProfileId: int = None
     ratings: dict = None
+    remotePoster: str = None
+    rootFolderPath: str = None
     runtime: int = None
-    secondaryYear: str = None
+    secondaryYear: int = None
     secondaryYearSourceId: int = None
-    sizeOnDisk: int = None
+    sizeOnDisk: float = None
     sortTitle: str = None
+    statistics: dict = None
     status: str = None
     studio: str = None
     tags: list = None
@@ -275,6 +336,68 @@ class RadarrMovie(NamedTuple):
     website: str = None
     year: int = None
     youTubeTrailerId: str = None
+    movieFileId: int = None
+    releaseDate: str = None
+    lastSearchTime: str = None
+
+
+class SonarrQueue(NamedTuple):
+    added: str = None
+    customFormats: list = None
+    customFormatScore: int = None
+    downloadClient: str = None
+    downloadId: str = None
+    episode: SonarrEpisode = None
+    episodeHasFile: bool = None
+    episodeId: int = None
+    errorMessage: str = None
+    estimatedCompletionTime: str = None
+    id: int = None
+    indexer: str = None
+    languages: list = None
+    outputPath: str = None
+    protocol: str = None
+    quality: dict = None
+    seasonNumber: int = None
+    series: SonarrTVShow = None
+    seriesId: int = None
+    size: float = None
+    sizeleft: float = None
+    status: str = None
+    statusMessages: list = None
+    timeleft: str = None
+    title: str = None
+    trackedDownloadState: str = None
+    trackedDownloadStatus: str = None
+    downloadClientHasPostImportCategory: bool = None
+
+
+class RadarrQueue(NamedTuple):
+    added: str = None
+    customFormats: list = None
+    customFormatScore: int = None
+    downloadClient: str = None
+    downloadId: str = None
+    errorMessage: str = None
+    estimatedCompletionTime: str = None
+    id: int = None
+    indexer: str = None
+    languages: list = None
+    movie: RadarrMovie = None
+    movieId: int = None
+    outputPath: str = None
+    protocol: str = None
+    quality: dict = None
+    size: float = None
+    sizeleft: float = None
+    status: str = None
+    statusMessages: list = None
+    timeleft: str = None
+    title: str = None
+    trackedDownloadState: str = None
+    trackedDownloadStatus: str = None
+    downloadClientHasPostImportCategory: bool = None
+    requestedDate: str = None
 
 
 # Sickchill

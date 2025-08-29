@@ -17,8 +17,8 @@ from varken.ombi import OmbiAPI
 from varken.overseerr import OverseerrAPI
 from varken.unifi import UniFiAPI
 from varken import VERSION, BRANCH, BUILD_DATE
-from varken.sonarr import SonarrAPIv3 as SonarrAPI
-from varken.radarr import RadarrAPIv3 as RadarrAPI
+from varken.sonarr import SonarrAPI
+from varken.radarr import RadarrAPI
 from varken.lidarr import LidarrAPI
 from varken.iniparser import INIParser
 from varken.dbmanager import DBManager
