@@ -17,7 +17,7 @@ ecosystem into InfluxDB using Grafana for a frontend
 Requirements:
 * [Python 3.6.7+](https://www.python.org/downloads/release/python-367/)
 * [Python3-pip](https://pip.pypa.io/en/stable/installing/)
-* [InfluxDB 1.8.x](https://www.influxdata.com/)
+* [InfluxDB 1.8.x or 2.x](https://www.influxdata.com/)
 * [Grafana](https://grafana.com/)
 
 <p align="center">
@@ -32,6 +32,7 @@ Supported Modules:
 * [Radarr](https://radarr.video/) - A fork of Sonarr to work with movies à la Couchpotato.
 * [Tautulli](https://tautulli.com/) - A Python based monitoring and tracking tool for Plex Media Server.
 * [Ombi](https://ombi.io/) - Want a Movie or TV Show on Plex or Emby? Use Ombi!
+* [Overseerr](https://overseerr.dev/) - Modern request management and media discovery tool.
 * [Lidarr](https://lidarr.audio/) - Looks and smells like Sonarr but made for music.
 
 Key features:
@@ -39,6 +40,16 @@ Key features:
 * Geolocation mapping from [GeoLite2](https://dev.maxmind.com/geoip/geoip2/geolite2/)
 * Grafana [Worldmap Panel](https://grafana.com/plugins/grafana-worldmap-panel/installation) support
 * **NEW**: Radarr/Sonarr API v3 support with auto-detection
+* **NEW**: InfluxDB 2.x support
+* **NEW**: Overseerr support
+
+## Acknowledgments
+
+This fork incorporates improvements from [thezak48/Varken](https://github.com/thezak48/Varken):
+* InfluxDB 2.x compatibility
+* Overseerr module
+* Enhanced Grafana dashboards for v9.x
+* Improved dependency management
 
 
 ## Installation Guides

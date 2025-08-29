@@ -14,6 +14,7 @@ from logging import getLogger, StreamHandler, Formatter, DEBUG
 # Needed to check version of python
 from varken import structures  # noqa
 from varken.ombi import OmbiAPI
+from varken.overseerr import OverseerrAPI
 from varken.unifi import UniFiAPI
 from varken import VERSION, BRANCH, BUILD_DATE
 from varken.sonarr import SonarrAPIv3 as SonarrAPI
@@ -169,9 +170,22 @@ if __name__ == "__main__":
             at_time = schedule.every(server.get_usg_stats_run_seconds).seconds
             at_time.do(thread, UNIFI.get_usg_stats).tag("unifi-{}-get_usg_stats".format(server.id))
 
+    if CONFIG.overseerr_enabled:
+        for server in CONFIG.overseerr_servers:
+            OVERSEERR = OverseerrAPI(server, DBMANAGER)
+            if server.get_request_total_counts:
+                at_time = schedule.every(server.request_total_run_seconds).seconds
+                at_time.do(thread, OVERSEERR.get_request_counts).tag("overseerr-{}-get_request_counts".format(server.id))
+            if server.num_latest_requests_to_fetch > 0:
+                at_time = schedule.every(server.num_latest_requests_seconds).seconds
+                at_time.do(thread, OVERSEERR.get_latest_requests).tag("overseerr-{}-get_latest_requests".format(server.id))
+            if server.num_total_issue_counts > 0:
+                at_time = schedule.every(server.num_total_issue_counts).seconds
+                at_time.do(thread, OVERSEERR.get_issue_counts).tag("overseerr-{}-get_issue_counts".format(server.id))
+
     # Run all on startup
     SERVICES_ENABLED = [CONFIG.ombi_enabled, CONFIG.radarr_enabled, CONFIG.tautulli_enabled, CONFIG.unifi_enabled,
-                        CONFIG.sonarr_enabled, CONFIG.sickchill_enabled, CONFIG.lidarr_enabled]
+                        CONFIG.sonarr_enabled, CONFIG.sickchill_enabled, CONFIG.lidarr_enabled, CONFIG.overseerr_enabled]
     if not [enabled for enabled in SERVICES_ENABLED if enabled]:
         vl.logger.error("All services disabled. Exiting")
         exit(1)

@@ -18,6 +18,7 @@ class InfluxServer(NamedTuple):
     url: str = 'localhost'
     username: str = 'root'
     verify_ssl: bool = False
+    org: str = '-'
 
 
 class SonarrServer(NamedTuple):
@@ -90,6 +91,18 @@ class UniFiServer(NamedTuple):
     verify_ssl: bool = False
 
 
+class OverseerrServer(NamedTuple):
+    api_key: str = None
+    id: int = None
+    url: str = None
+    verify_ssl: bool = False
+    get_request_total_counts: bool = False
+    request_total_run_seconds: int = 30
+    num_latest_requests_to_fetch: int = 10
+    num_latest_requests_seconds: int = 30
+    num_total_issue_counts: int = 300
+
+
 # Shared
 class Queue(NamedTuple):
     downloadId: str = None
@@ -119,6 +132,23 @@ class OmbiRequestCounts(NamedTuple):
 class OmbiIssuesCounts(NamedTuple):
     inProgress: int = 0
     pending: int = 0
+    resolved: int = 0
+
+
+# Overseerr Structures
+class OverseerrRequestCounts(NamedTuple):
+    pending: int = 0
+    approved: int = 0
+    processing: int = 0
+    available: int = 0
+    total: int = 0
+    movie: int = 0
+    tv: int = 0
+    declined: int = 0
+
+
+class OverseerrIssuesCounts(NamedTuple):
+    open: int = 0
     resolved: int = 0
 
 

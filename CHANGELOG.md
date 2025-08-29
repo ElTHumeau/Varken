@@ -1,16 +1,19 @@
 # Change Log
 
-## [Unreleased] - API v3 Support
+## [Unreleased] - API v3 Support & Modern Features
 **Implemented enhancements:**
-- Added Radarr/Sonarr API v3 support
-- Auto-detection of API version (v1 or v3)
+- Added Radarr/Sonarr API v3 support with auto-detection
 - Environment variables to force API version
 - Support for Sonarr v4/v5 and Radarr v5
+- Added Overseerr support (modern Ombi alternative)
+- Added InfluxDB 2.x client support
 - Updated dependencies to latest stable versions
+- Added Renovate for automated dependency updates
 
 **Technical changes:**
 - Added `api_detector.py` module for version detection
-- Created `radarr_v3.py` and `sonarr_v3.py` with dual API support
+- Added `overseerr.py` module with full request/issue tracking
+- Updated structures for Overseerr support
 - Added caching for API version detection
 - Backward compatible with v1 API
 
