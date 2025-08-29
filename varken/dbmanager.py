@@ -1,7 +1,7 @@
 import re
 from sys import exit
 from logging import getLogger
-from influxdb_client import InfluxDBClient, BucketRetentionRules
+from influxdb_client import InfluxDBClient
 from influxdb_client.client.write_api import SYNCHRONOUS
 from influxdb_client.client.exceptions import InfluxDBError
 from urllib3.exceptions import NewConnectionError
