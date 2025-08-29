@@ -1,5 +1,19 @@
 # Change Log
 
+## [Unreleased] - API v3 Support
+**Implemented enhancements:**
+- Added Radarr/Sonarr API v3 support
+- Auto-detection of API version (v1 or v3)
+- Environment variables to force API version
+- Support for Sonarr v4/v5 and Radarr v5
+- Updated dependencies to latest stable versions
+
+**Technical changes:**
+- Added `api_detector.py` module for version detection
+- Created `radarr_v3.py` and `sonarr_v3.py` with dual API support
+- Added caching for API version detection
+- Backward compatible with v1 API
+
 ## [v1.7.7](https://github.com/Boerderij/Varken/tree/v1.7.7) (2020-12-21)
 [Full Changelog](https://github.com/Boerderij/Varken/compare/1.7.6...v1.7.7)
 

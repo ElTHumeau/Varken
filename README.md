@@ -38,6 +38,7 @@ Key features:
 * Multiple server support for all modules
 * Geolocation mapping from [GeoLite2](https://dev.maxmind.com/geoip/geoip2/geolite2/)
 * Grafana [Worldmap Panel](https://grafana.com/plugins/grafana-worldmap-panel/installation) support
+* **NEW**: Radarr/Sonarr API v3 support with auto-detection
 
 
 ## Installation Guides
