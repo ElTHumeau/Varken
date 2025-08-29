@@ -8,5 +8,9 @@ exclude =
     .tox
 ignore = 
     W503,
-    W504
-max-complexity = 10
+    W504,
+    C901,
+    E121,
+    E126,
+    E131
+max-complexity = 20

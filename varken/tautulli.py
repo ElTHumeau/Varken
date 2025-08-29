@@ -201,7 +201,7 @@ class TautulliAPI(object):
 
         for library in get:
             data = {
-                    "measurement": "Tautulli",
+                "measurement": "Tautulli",
                     "tags": {
                         "type": "library_stats",
                         "server": self.server.id,

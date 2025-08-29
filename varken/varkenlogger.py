@@ -13,7 +13,7 @@ class BlacklistFilter(Filter):
     max_files = 5
     log_folder = 'logs'
 
-    blacklisted_strings = ['apikey',  'username',  'password', 'url']
+    blacklisted_strings = ['apikey', 'username', 'password', 'url']
 
     def __init__(self, filteredstrings):
         super().__init__()

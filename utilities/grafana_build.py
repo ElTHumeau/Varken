@@ -148,7 +148,7 @@ dashboard_data = {
             "description": ""
         },
         {
-          "name": "VAR_LIDARRURL",
+            "name": "VAR_LIDARRURL",
           "type": "constant",
           "label": "lidarr URL",
           "value": lidarr_url,
@@ -160,5 +160,5 @@ try:
     make_dashboard = session.post(url_base + '/dashboards/import', json=dashboard_data, auth=auth, verify=verify)
     if make_dashboard.status_code == 200 and make_dashboard.json().get('imported'):
         print(f'Created dashboard "{our_dashboard["title"]}"')
-except:
-    print('Shit...')
+except Exception as e:
+    print(f'Error: {e}')
